@@ -10,7 +10,7 @@ The module provides a simple class model for the 2012 edition of "The UMIST Data
     >> reagents_list, reactions_list = read()
     >>
 
-The data is loaded directly into memory. At the time it weights approximately 400kb.
+The data is loaded directly into memory. At the time it weighs approximately 400kb.
 
 ###Classes
     - Reagent - simple reagent class with no methods
