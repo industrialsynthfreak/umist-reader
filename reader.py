@@ -1,7 +1,9 @@
 """This file provides parser and loader functions.
 """
 
+import logging
 import os
+import sys
 import urllib.request as request
 
 from urllib.error import *
@@ -27,6 +29,16 @@ def read(ignore_exceptions=True):
     :return: list of reactions and list of reagents
     :rtype: tuple of ([Reaction,..,Reaction], [Reagent,..,Reagent])
     """
+
+    def setup_logger():
+        logging.basicConfig(filename='umistloader.log')
+        l = logging.getLogger()
+        l.setLevel(logging.DEBUG)
+        return l
+
+    def get_size_of(data):
+        size = sum((sys.getsizeof(r) for r in data))
+        return size
 
     def parse_reagent(reagent):
         r = REAGENTS.get(reagent)
@@ -70,10 +82,12 @@ def read(ignore_exceptions=True):
 
     REACTIONS = list()
     REAGENTS = dict()
-
+    logger = setup_logger()
     try:
+        logger.debug('Opening URL: %s' % _link)
         data = request.urlopen(_link)
     except URLError:
+        logger.debug('Cannot open URL, using a local db.')
         path = os.path.join(os.getcwd(), _path)
         data = open(path, 'rb')
     for line in data:
@@ -83,16 +97,13 @@ def read(ignore_exceptions=True):
             if not ignore_exceptions:
                 raise err
     data.close()
-    return REAGENTS.values(), REACTIONS
+    REAGENTS = list(REAGENTS.values())
+    logger.debug('Reactions: %d records loaded, %d KB'
+                 % (len(REACTIONS), get_size_of(REACTIONS) // 1000))
+    logger.debug('Reagents: %d records loaded, %d KB'
+                 % (len(REAGENTS), get_size_of(REAGENTS) // 1000))
+    return REAGENTS, REACTIONS
 
 
 if __name__ == "__main__":
-    import sys
     reagents, reactions = read()
-    for r in reagents:
-        print(r)
-    for r in reactions:
-        print(r)
-    SIZE = sum([sys.getsizeof(r) for r in reactions])
-    SIZE += sum([sys.getsizeof(r) for r in reagents])
-    print(SIZE)
