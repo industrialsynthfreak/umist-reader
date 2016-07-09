@@ -7,8 +7,10 @@ from math import exp
 class Reagent:
     """This class provides instances for chemical reagents.
 
-    **attributes**
-        `name` - name of the molecule/atom/particle
+    .. py:attribute:: name
+
+        Name of a molecule/atom/particle.
+
     """
     def __init__(self, name):
         self.name = name
@@ -20,30 +22,35 @@ class Reagent:
 class Fit:
     """Set of reaction rate coefficients and other parameters for a
     certain temperature band.
-    """
 
+    :param t_range: temperature range in K
+    :type t_range: tuple of (float, float)
+    :param a:
+    :type a: float
+    :param b:
+    :type b: float
+    :param c: fit coefficients
+    :type c: float
+    :param source: source type.
+    :type accuracy: str
+
+    *Values:*
+        - E - estimated
+        - M - measured
+        - C - calculated
+        - L - from literature
+
+    :param accuracy: fit error.
+    :type accuracy: str
+
+    *Values:*
+        - A - < 25% error
+        - B - < 50% error
+        - C - within a factor 2
+        - D - within an order of magnitude
+        - E - highly uncertain
+    """
     def __init__(self, t_range, a, b, c, source, accuracy):
-        """
-        :param t_range: temperature range in K
-        :type t_range: tuple of (float, float)
-        :param a: :param b: :param c: fit coefficients
-        :type a: :type b: type c: float
-        :param source: source type
-            *values*
-                - E - estimated
-                - M - measured
-                - C - calculated
-                - L - from literature
-        :type source: str
-        :param accuracy: fit error
-            *values*
-                - A - < 25% error
-                - B - < 50% error
-                - C - within a factor 2
-                - D - within an order of magnitude
-                - E - highly uncertain
-        :type accuracy: str
-        """
         self.t_range = t_range
         self.a = a
         self.b = b
@@ -58,10 +65,14 @@ class Fit:
 class Reaction:
     """This class provides instances for chemical reactions.
 
-    **attributes**
-        `id` - int, index (from the table)
-        `type` - str, reaction type two letter identifier
-            *values*
+    .. py:attribute:: id
+
+    Reaction identifier (from the table).
+
+    .. py:attribute:: type
+
+    Reaction type two letter identifier.
+            *Values:*
                 - AD - Associative Detachment
                 - CD - Collisional Dissociation
                 - CE - Charge Exchange
@@ -75,9 +86,18 @@ class Reaction:
                 - RA - Radiative Association
                 - REA - Radiative Electron Attachment
                 - RR - Radiative Recombination
-        `reagents` - list of reagents (instances of Reagent)
-        `products` - list of products (instances of Reagent)
-        `fits` - list of fit bands with coefficients (instances of Fit)
+
+    .. py:attribute:: reagents
+
+    List of reagents (instances of Reagent).
+
+    .. py:attribute:: products
+
+    List of products (instances of Reagent).
+
+    .. py:attribute:: fits
+
+    List of fit bands with coefficients (instances of Fit).
     """
 
     def __init__(self):
@@ -99,25 +119,35 @@ class Reaction:
 
         Common formula:
 
-            k = a * (T/300)**b * exp(-c/T) [cm**3 / s],
+        .. math::
+
+            k = a * {(T/300)}^b * e^{-c/T} [cm^3 * s^{-1}],
 
         where a, b, c - coefficients, T - temperature in K.
         For direct ionization (type = CP):
 
-            k = a [1/s],
+        .. math::
+
+            k = a [s^{-1}],
 
         For cosmic-ray photoreactions (type = CR):
-            k = a * (T/300)**b * c/(1 - w) [1/s],
+
+        .. math::
+
+            k = a * {(T/300)}^b * c/(1 - w) [s^{-1}],
 
         where a - cosmic-ray ionizaton rate, c - efficiency of the cosmic-ray
         ionization event, w - dust-grain albedo in FUV range (~0.4 - 0.6 at
         150nm).
+
         For photoprocesses (type = PH):
 
-            k = a * exp(-c/Av) [1/s],
+        .. math::
+
+            k = a * e^{-c/Av} [s^{-1}],
 
         where a - rate coefficient in the UV radiation field, Av - dust
-        extinction at VIS wavelengths, c - scale parameter for VIS->UV.
+        extinction at VIS wavelengths, c - scale parameter for VIS -> UV.
 
         :param t: temperature of medium
         :type t: float
@@ -125,6 +155,7 @@ class Reaction:
             equals 'CR', dust extinction (Av) if reaction type is 'PH',
             otherwise not used
         :type arg: float
+
         :return: reaction rate in 1/s for CR, CP, PH types and cm3/s for
             everyone else, returns 0.0f if no available fit data found
         :rtype: float

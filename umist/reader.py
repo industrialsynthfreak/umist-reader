@@ -8,24 +8,23 @@ import urllib.request as request
 
 from urllib.error import *
 
-from reaction import Reaction, Reagent, Fit
+from .reaction import Reaction, Reagent, Fit
 
-
-__version__ = '1.0'
-
-_link = 'http://udfa.ajmarkwick.net/downloads/RATE12.dist.txt'
-_path = 'sample.txt'
+URL = 'http://udfa.ajmarkwick.net/downloads/RATE12.dist.txt'
+LOCAL_PATH = 'sample.txt'
 
 
 def read(ignore_exceptions=True):
     """Reads and returns a class based representation of UMIST database.
 
-    ..note:: If _link cannot be reached it will try to parse sample.txt file
-        with UMIST 2012 data which should be present in the module dir.
+    If URL cannot be reached it will try to parse sample.txt file with
+    UMIST 2012 data which should be present in the module dir. Debug info
+    will be exported to `umistloader.log` file.
 
     :param ignore_exceptions: default is True, if True then exceptions will
         be omitted
     :type ignore_exceptions: bool
+
     :return: list of reactions and list of reagents
     :rtype: tuple of ([Reaction,..,Reaction], [Reagent,..,Reagent])
     """
@@ -84,11 +83,11 @@ def read(ignore_exceptions=True):
     REAGENTS = dict()
     logger = setup_logger()
     try:
-        logger.debug('Opening URL: %s' % _link)
-        data = request.urlopen(_link)
+        logger.debug('Opening URL: %s' % URL)
+        data = request.urlopen(URL)
     except URLError:
         logger.debug('Cannot open URL, using a local db.')
-        path = os.path.join(os.getcwd(), _path)
+        path = os.path.join(os.getcwd(), LOCAL_PATH)
         data = open(path, 'rb')
     for line in data:
         try:

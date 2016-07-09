@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../umist/.idea/umist.iml" filepath="$PROJECT_DIR$/../umist/.idea/umist.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/umist.iml" filepath="$PROJECT_DIR$/.idea/umist.iml" />
     </modules>
   </component>
 </project>
