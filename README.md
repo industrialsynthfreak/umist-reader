@@ -12,6 +12,8 @@ The module provides a simple class model for the 2012 edition of "The UMIST Data
 
 The data is loaded directly into memory. At the time it weighs approximately 400kb.
 
+See docs/build auto-generated documentation.
+
 ###Classes
     - Reagent - simple reagent class with no methods
     - Reaction - simple reaction type, containing reagents, products and fits
