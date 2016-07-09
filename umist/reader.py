@@ -17,7 +17,7 @@ class Reader:
     This class has no need to be instantiated.
     """
     url = 'http://udfa.ajmarkwick.net/downloads/RATE12.dist.txt'
-    local_path = '../data/sample.txt'
+    local_path = '../data/umist/sample.txt'
     log_path = '../log/umist_loader.log'
 
     @classmethod
