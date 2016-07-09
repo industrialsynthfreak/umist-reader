@@ -1,0 +1,361 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>umist package &mdash; umist-reader 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="umist-reader 1.0 documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="umist-package">
+<h1>umist package<a class="headerlink" href="#umist-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-umist">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-umist" title="Permalink to this headline">¶</a></h2>
+<p>Reader for the UMIST chem. reactions database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Authors:</th><td class="field-body">Violet Red</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Version:</th><td class="field-body">1.0 2016/07/08</td>
+</tr>
+</tbody>
+</table>
+<p>The module provides a simple class model for the 2012 edition of the
+<em>UMIST Database for Astrochemistry</em>.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">umist.reader</span> <span class="k">import</span> <span class="n">read</span>
+<span class="n">reagents</span><span class="p">,</span> <span class="n">reactions</span> <span class="o">=</span> <span class="n">read</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reactions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_rate</span><span class="p">(</span><span class="mi">300</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The data is loaded directly into memory. At the time it weights
+approximately 400 KB.</p>
+</div>
+<p><strong>Basic Info:</strong></p>
+<blockquote>
+<div>The UMIST db is a set of reactions of formation and destruction of common
+chemical elements in the interstellar medium, such as molecular clouds.
+It contains temperatures and coefficients for the reaction rate equation.</div></blockquote>
+<p><strong>Source data format description:</strong></p>
+<blockquote>
+<div>Line format:
+<cite>reaction no.:r_type:R1:R2:P1:P2:P3:P4:NE:[a : b : c:Tl:Tu:ST:ACC:REF]</cite></div></blockquote>
+</div>
+<div class="section" id="module-umist.reader">
+<span id="umist-reader-module"></span><h2>umist.reader module<a class="headerlink" href="#module-umist.reader" title="Permalink to this headline">¶</a></h2>
+<p>This file provides parser and loader functions.</p>
+<dl class="function">
+<dt id="umist.reader.read">
+<code class="descclassname">umist.reader.</code><code class="descname">read</code><span class="sig-paren">(</span><em>ignore_exceptions=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/umist/reader.html#read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#umist.reader.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads and returns a class based representation of UMIST database.</p>
+<p>If URL cannot be reached it will try to parse sample.txt file with
+UMIST 2012 data which should be present in the module dir. Debug info
+will be exported to <cite>umistloader.log</cite> file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ignore_exceptions</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; default is True, if True then exceptions will
+be omitted</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of reactions and list of reagents</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple of ([Reaction,..,Reaction], [Reagent,..,Reagent])</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-umist.reaction">
+<span id="umist-reaction-module"></span><h2>umist.reaction module<a class="headerlink" href="#module-umist.reaction" title="Permalink to this headline">¶</a></h2>
+<p>This file provides classes for UMIST chemical database.</p>
+<dl class="class">
+<dt id="umist.reaction.Fit">
+<em class="property">class </em><code class="descclassname">umist.reaction.</code><code class="descname">Fit</code><span class="sig-paren">(</span><em>t_range</em>, <em>a</em>, <em>b</em>, <em>c</em>, <em>source</em>, <em>accuracy</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/umist/reaction.html#Fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#umist.reaction.Fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Set of reaction rate coefficients and other parameters for a
+certain temperature band.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>t_range</strong> (<em>tuple of (float, float)</em>) &#8211; temperature range in K</li>
+<li><strong>a</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; </li>
+<li><strong>b</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; </li>
+<li><strong>c</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; fit coefficients</li>
+<li><strong>source</strong> &#8211; source type.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt><em>Values:</em></dt>
+<dd><ul class="first last simple">
+<li>E - estimated</li>
+<li>M - measured</li>
+<li>C - calculated</li>
+<li>L - from literature</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>accuracy</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; fit error.</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt><em>Values:</em></dt>
+<dd><ul class="first last simple">
+<li>A - &lt; 25% error</li>
+<li>B - &lt; 50% error</li>
+<li>C - within a factor 2</li>
+<li>D - within an order of magnitude</li>
+<li>E - highly uncertain</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="umist.reaction.Reaction">
+<em class="property">class </em><code class="descclassname">umist.reaction.</code><code class="descname">Reaction</code><a class="reference internal" href="_modules/umist/reaction.html#Reaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#umist.reaction.Reaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>This class provides instances for chemical reactions.</p>
+<dl class="attribute">
+<dt id="umist.reaction.Reaction.id">
+<code class="descname">id</code><a class="headerlink" href="#umist.reaction.Reaction.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Reaction identifier (from the table).</p>
+<dl class="attribute">
+<dt id="umist.reaction.Reaction.type">
+<code class="descname">type</code><a class="headerlink" href="#umist.reaction.Reaction.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="docutils">
+<dt>Reaction type two letter identifier.</dt>
+<dd><dl class="first last docutils">
+<dt><em>Values:</em></dt>
+<dd><ul class="first last simple">
+<li>AD - Associative Detachment</li>
+<li>CD - Collisional Dissociation</li>
+<li>CE - Charge Exchange</li>
+<li>CP - Cosmic-Ray Proton (CRP)</li>
+<li>CR - Cosmic-Ray Photon (CRPHOT)</li>
+<li>DR - Dissociative Recombination</li>
+<li>IN - Ion-Neutral</li>
+<li>MN - Mutual Neutralisation</li>
+<li>NN - Neutral-Neutral</li>
+<li>PH - Photoprocess</li>
+<li>RA - Radiative Association</li>
+<li>REA - Radiative Electron Attachment</li>
+<li>RR - Radiative Recombination</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="umist.reaction.Reaction.reagents">
+<code class="descname">reagents</code><a class="headerlink" href="#umist.reaction.Reaction.reagents" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>List of reagents (instances of Reagent).</p>
+<dl class="attribute">
+<dt id="umist.reaction.Reaction.products">
+<code class="descname">products</code><a class="headerlink" href="#umist.reaction.Reaction.products" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>List of products (instances of Reagent).</p>
+<dl class="attribute">
+<dt id="umist.reaction.Reaction.fits">
+<code class="descname">fits</code><a class="headerlink" href="#umist.reaction.Reaction.fits" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>List of fit bands with coefficients (instances of Fit).</p>
+<dl class="method">
+<dt id="umist.reaction.Reaction.get_rate">
+<code class="descname">get_rate</code><span class="sig-paren">(</span><em>t</em>, <em>arg=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/umist/reaction.html#Reaction.get_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#umist.reaction.Reaction.get_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the reaction rate.</p>
+<p>Common formula:</p>
+<div class="math">
+\[k = a * {(T/300)}^b * e^{-c/T} [cm^3 * s^{-1}],\]</div>
+<p>where a, b, c - coefficients, T - temperature in K.
+For direct ionization (type = CP):</p>
+<div class="math">
+\[k = a [s^{-1}],\]</div>
+<p>For cosmic-ray photoreactions (type = CR):</p>
+<div class="math">
+\[k = a * {(T/300)}^b * c/(1 - w) [s^{-1}],\]</div>
+<p>where a - cosmic-ray ionizaton rate, c - efficiency of the cosmic-ray
+ionization event, w - dust-grain albedo in FUV range (~0.4 - 0.6 at
+150nm).</p>
+<p>For photoprocesses (type = PH):</p>
+<div class="math">
+\[k = a * e^{-c/Av} [s^{-1}],\]</div>
+<p>where a - rate coefficient in the UV radiation field, Av - dust
+extinction at VIS wavelengths, c - scale parameter for VIS -&gt; UV.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>t</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; temperature of medium</li>
+<li><strong>arg</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; default is 0.5, dust-grain albedo (w) if reaction type
+equals &#8216;CR&#8217;, dust extinction (Av) if reaction type is &#8216;PH&#8217;,
+otherwise not used</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">reaction rate in 1/s for CR, CP, PH types and cm3/s for
+everyone else, returns 0.0f if no available fit data found</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="umist.reaction.Reagent">
+<em class="property">class </em><code class="descclassname">umist.reaction.</code><code class="descname">Reagent</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/umist/reaction.html#Reagent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#umist.reaction.Reagent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>This class provides instances for chemical reagents.</p>
+<dl class="attribute">
+<dt id="umist.reaction.Reagent.name">
+<code class="descname">name</code><a class="headerlink" href="#umist.reaction.Reagent.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of a molecule/atom/particle.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-umist.tests">
+<span id="umist-tests-module"></span><h2>umist.tests module<a class="headerlink" href="#module-umist.tests" title="Permalink to this headline">¶</a></h2>
+<p>This file provides tests for umist database loader.</p>
+<p>This one not only tests code but also validates database.</p>
+<dl class="class">
+<dt id="umist.tests.Test">
+<em class="property">class </em><code class="descclassname">umist.tests.</code><code class="descname">Test</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/umist/tests.html#Test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#umist.tests.Test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="umist.tests.Test.test_reader_function">
+<code class="descname">test_reader_function</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/umist/tests.html#Test.test_reader_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#umist.tests.Test.test_reader_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">umist package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-umist">Module contents</a></li>
+<li><a class="reference internal" href="#module-umist.reader">umist.reader module</a></li>
+<li><a class="reference internal" href="#module-umist.reaction">umist.reaction module</a></li>
+<li><a class="reference internal" href="#module-umist.tests">umist.tests module</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/umist.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Violet Red.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/umist.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>umist.reaction &mdash; umist-reader 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="umist-reader 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for umist.reaction</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;This file provides classes for UMIST chemical database.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">exp</span>
+
+
+<div class="viewcode-block" id="Reagent"><a class="viewcode-back" href="../../umist.html#umist.reaction.Reagent">[docs]</a><span class="k">class</span> <span class="nc">Reagent</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This class provides instances for chemical reagents.</span>
+
+<span class="sd">    .. py:attribute:: name</span>
+
+<span class="sd">        Name of a molecule/atom/particle.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
+
+
+<div class="viewcode-block" id="Fit"><a class="viewcode-back" href="../../umist.html#umist.reaction.Fit">[docs]</a><span class="k">class</span> <span class="nc">Fit</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Set of reaction rate coefficients and other parameters for a</span>
+<span class="sd">    certain temperature band.</span>
+
+<span class="sd">    :param t_range: temperature range in K</span>
+<span class="sd">    :type t_range: tuple of (float, float)</span>
+<span class="sd">    :param a:</span>
+<span class="sd">    :type a: float</span>
+<span class="sd">    :param b:</span>
+<span class="sd">    :type b: float</span>
+<span class="sd">    :param c: fit coefficients</span>
+<span class="sd">    :type c: float</span>
+<span class="sd">    :param source: source type.</span>
+<span class="sd">    :type accuracy: str</span>
+
+<span class="sd">    *Values:*</span>
+<span class="sd">        - E - estimated</span>
+<span class="sd">        - M - measured</span>
+<span class="sd">        - C - calculated</span>
+<span class="sd">        - L - from literature</span>
+
+<span class="sd">    :param accuracy: fit error.</span>
+<span class="sd">    :type accuracy: str</span>
+
+<span class="sd">    *Values:*</span>
+<span class="sd">        - A - &lt; 25% error</span>
+<span class="sd">        - B - &lt; 50% error</span>
+<span class="sd">        - C - within a factor 2</span>
+<span class="sd">        - D - within an order of magnitude</span>
+<span class="sd">        - E - highly uncertain</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t_range</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_range</span> <span class="o">=</span> <span class="n">t_range</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">c</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%f</span><span class="s1">--</span><span class="si">%f</span><span class="s1">K&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_range</span></div>
+
+
+<div class="viewcode-block" id="Reaction"><a class="viewcode-back" href="../../umist.html#umist.reaction.Reaction">[docs]</a><span class="k">class</span> <span class="nc">Reaction</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This class provides instances for chemical reactions.</span>
+
+<span class="sd">    .. py:attribute:: id</span>
+
+<span class="sd">    Reaction identifier (from the table).</span>
+
+<span class="sd">    .. py:attribute:: type</span>
+
+<span class="sd">    Reaction type two letter identifier.</span>
+<span class="sd">            *Values:*</span>
+<span class="sd">                - AD - Associative Detachment</span>
+<span class="sd">                - CD - Collisional Dissociation</span>
+<span class="sd">                - CE - Charge Exchange</span>
+<span class="sd">                - CP - Cosmic-Ray Proton (CRP)</span>
+<span class="sd">                - CR - Cosmic-Ray Photon (CRPHOT)</span>
+<span class="sd">                - DR - Dissociative Recombination</span>
+<span class="sd">                - IN - Ion-Neutral</span>
+<span class="sd">                - MN - Mutual Neutralisation</span>
+<span class="sd">                - NN - Neutral-Neutral</span>
+<span class="sd">                - PH - Photoprocess</span>
+<span class="sd">                - RA - Radiative Association</span>
+<span class="sd">                - REA - Radiative Electron Attachment</span>
+<span class="sd">                - RR - Radiative Recombination</span>
+
+<span class="sd">    .. py:attribute:: reagents</span>
+
+<span class="sd">    List of reagents (instances of Reagent).</span>
+
+<span class="sd">    .. py:attribute:: products</span>
+
+<span class="sd">    List of products (instances of Reagent).</span>
+
+<span class="sd">    .. py:attribute:: fits</span>
+
+<span class="sd">    List of fit bands with coefficients (instances of Fit).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reagents</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">products</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fits</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">reag</span> <span class="o">=</span> <span class="s1">&#39; + &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reagents</span><span class="p">))</span>
+        <span class="n">prod</span> <span class="o">=</span> <span class="s1">&#39; + &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">products</span><span class="p">))</span>
+        <span class="n">fits</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fits</span><span class="p">))</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> reaction </span><span class="si">%s</span><span class="s1"> -&gt; </span><span class="si">%s</span><span class="s1">, Range: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">reag</span><span class="p">,</span> <span class="n">prod</span><span class="p">,</span> <span class="n">fits</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span>
+
+<div class="viewcode-block" id="Reaction.get_rate"><a class="viewcode-back" href="../../umist.html#umist.reaction.Reaction.get_rate">[docs]</a>    <span class="k">def</span> <span class="nf">get_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">arg</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the reaction rate.</span>
+
+<span class="sd">        Common formula:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            k = a * {(T/300)}^b * e^{-c/T} [cm^3 * s^{-1}],</span>
+
+<span class="sd">        where a, b, c - coefficients, T - temperature in K.</span>
+<span class="sd">        For direct ionization (type = CP):</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            k = a [s^{-1}],</span>
+
+<span class="sd">        For cosmic-ray photoreactions (type = CR):</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            k = a * {(T/300)}^b * c/(1 - w) [s^{-1}],</span>
+
+<span class="sd">        where a - cosmic-ray ionizaton rate, c - efficiency of the cosmic-ray</span>
+<span class="sd">        ionization event, w - dust-grain albedo in FUV range (~0.4 - 0.6 at</span>
+<span class="sd">        150nm).</span>
+
+<span class="sd">        For photoprocesses (type = PH):</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            k = a * e^{-c/Av} [s^{-1}],</span>
+
+<span class="sd">        where a - rate coefficient in the UV radiation field, Av - dust</span>
+<span class="sd">        extinction at VIS wavelengths, c - scale parameter for VIS -&gt; UV.</span>
+
+<span class="sd">        :param t: temperature of medium</span>
+<span class="sd">        :type t: float</span>
+<span class="sd">        :param arg: default is 0.5, dust-grain albedo (w) if reaction type</span>
+<span class="sd">            equals &#39;CR&#39;, dust extinction (Av) if reaction type is &#39;PH&#39;,</span>
+<span class="sd">            otherwise not used</span>
+<span class="sd">        :type arg: float</span>
+
+<span class="sd">        :return: reaction rate in 1/s for CR, CP, PH types and cm3/s for</span>
+<span class="sd">            everyone else, returns 0.0f if no available fit data found</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fits</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">t_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">f</span><span class="o">.</span><span class="n">t_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fit</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;CP&#39;</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">a</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;CR&#39;</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="mf">300.</span><span class="p">)</span><span class="o">**</span><span class="n">fit</span><span class="o">.</span><span class="n">b</span> <span class="o">*</span> <span class="n">fit</span><span class="o">.</span><span class="n">c</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">arg</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;PH&#39;</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">a</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">fit</span><span class="o">.</span><span class="n">c</span> <span class="o">/</span> <span class="n">arg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="mf">300.</span><span class="p">)</span><span class="o">**</span><span class="n">fit</span><span class="o">.</span><span class="n">b</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">fit</span><span class="o">.</span><span class="n">c</span> <span class="o">/</span> <span class="n">t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">k</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Violet Red.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>umist.reader &mdash; umist-reader 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="umist-reader 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for umist.reader</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;This file provides parser and loader functions.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span> <span class="kn">as</span> <span class="nn">request</span>
+
+<span class="kn">from</span> <span class="nn">urllib.error</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">.reaction</span> <span class="kn">import</span> <span class="n">Reaction</span><span class="p">,</span> <span class="n">Reagent</span><span class="p">,</span> <span class="n">Fit</span>
+
+<span class="n">URL</span> <span class="o">=</span> <span class="s1">&#39;http://udfa.ajmarkwick.net/downloads/RATE12.dist.txt&#39;</span>
+<span class="n">LOCAL_PATH</span> <span class="o">=</span> <span class="s1">&#39;sample.txt&#39;</span>
+
+
+<div class="viewcode-block" id="read"><a class="viewcode-back" href="../../umist.html#umist.reader.read">[docs]</a><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">ignore_exceptions</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reads and returns a class based representation of UMIST database.</span>
+
+<span class="sd">    If URL cannot be reached it will try to parse sample.txt file with</span>
+<span class="sd">    UMIST 2012 data which should be present in the module dir. Debug info</span>
+<span class="sd">    will be exported to `umistloader.log` file.</span>
+
+<span class="sd">    :param ignore_exceptions: default is True, if True then exceptions will</span>
+<span class="sd">        be omitted</span>
+<span class="sd">    :type ignore_exceptions: bool</span>
+
+<span class="sd">    :return: list of reactions and list of reagents</span>
+<span class="sd">    :rtype: tuple of ([Reaction,..,Reaction], [Reagent,..,Reagent])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">setup_logger</span><span class="p">():</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;umistloader.log&#39;</span><span class="p">)</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+        <span class="n">l</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">l</span>
+
+    <span class="k">def</span> <span class="nf">get_size_of</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="n">sys</span><span class="o">.</span><span class="n">getsizeof</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">data</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">size</span>
+
+    <span class="k">def</span> <span class="nf">parse_reagent</span><span class="p">(</span><span class="n">reagent</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">REAGENTS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reagent</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">r</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">Reagent</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">reagent</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+            <span class="n">REAGENTS</span><span class="p">[</span><span class="n">reagent</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span>
+        <span class="k">return</span> <span class="n">r</span>
+
+    <span class="k">def</span> <span class="nf">parse_reaction</span><span class="p">(</span><span class="n">r_data</span><span class="p">):</span>
+        <span class="c1"># reaction_no.:r_type:R1:R2:P1:P2:P3:P4:NE:[a : b : c:Tl:Tu:ST:ACC:REF]</span>
+        <span class="n">r_data</span> <span class="o">=</span> <span class="n">r_data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">b</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+
+        <span class="n">reaction</span> <span class="o">=</span> <span class="n">Reaction</span><span class="p">()</span>
+        <span class="n">reaction</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">r_data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">reaction</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">r_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">reagent</span> <span class="ow">in</span> <span class="n">r_data</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">reagent</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">reaction</span><span class="o">.</span><span class="n">reagents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parse_reagent</span><span class="p">(</span><span class="n">reagent</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">product</span> <span class="ow">in</span> <span class="n">r_data</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">8</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">product</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">reaction</span><span class="o">.</span><span class="n">products</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parse_reagent</span><span class="p">(</span><span class="n">product</span><span class="p">))</span>
+
+        <span class="n">fits</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">r_data</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">fits</span><span class="p">):</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">f</span> <span class="o">*</span> <span class="mi">8</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">r_data</span><span class="p">[</span><span class="mi">9</span> <span class="o">+</span> <span class="n">i</span><span class="p">])</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">r_data</span><span class="p">[</span><span class="mi">10</span> <span class="o">+</span> <span class="n">i</span><span class="p">])</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">r_data</span><span class="p">[</span><span class="mi">11</span> <span class="o">+</span> <span class="n">i</span><span class="p">])</span>
+            <span class="n">t0</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">r_data</span><span class="p">[</span><span class="mi">12</span> <span class="o">+</span> <span class="n">i</span><span class="p">])</span>
+            <span class="n">t1</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">r_data</span><span class="p">[</span><span class="mi">13</span> <span class="o">+</span> <span class="n">i</span><span class="p">])</span>
+            <span class="n">st</span> <span class="o">=</span> <span class="n">r_data</span><span class="p">[</span><span class="mi">14</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="n">acc</span> <span class="o">=</span> <span class="n">r_data</span><span class="p">[</span><span class="mi">15</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="c1"># reference = r_data[16 + i]</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">((</span><span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">),</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">acc</span><span class="p">)</span>
+            <span class="n">reaction</span><span class="o">.</span><span class="n">fits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">REACTIONS</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reaction</span><span class="p">)</span>
+
+    <span class="n">REACTIONS</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">REAGENTS</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">setup_logger</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Opening URL: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">URL</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">URL</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">URLError</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Cannot open URL, using a local db.&#39;</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">LOCAL_PATH</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parse_reaction</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">ignore_exceptions</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">err</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">REAGENTS</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">REAGENTS</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Reactions: </span><span class="si">%d</span><span class="s1"> records loaded, </span><span class="si">%d</span><span class="s1"> KB&#39;</span>
+                 <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">REACTIONS</span><span class="p">),</span> <span class="n">get_size_of</span><span class="p">(</span><span class="n">REACTIONS</span><span class="p">)</span> <span class="o">//</span> <span class="mi">1000</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Reagents: </span><span class="si">%d</span><span class="s1"> records loaded, </span><span class="si">%d</span><span class="s1"> KB&#39;</span>
+                 <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">REAGENTS</span><span class="p">),</span> <span class="n">get_size_of</span><span class="p">(</span><span class="n">REAGENTS</span><span class="p">)</span> <span class="o">//</span> <span class="mi">1000</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">REAGENTS</span><span class="p">,</span> <span class="n">REACTIONS</span></div>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">reagents</span><span class="p">,</span> <span class="n">reactions</span> <span class="o">=</span> <span class="n">read</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Violet Red.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
