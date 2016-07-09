@@ -32,7 +32,7 @@ class Fit:
     :param c: fit coefficients
     :type c: float
     :param source: source type.
-    :type accuracy: str
+    :type source: str
 
     *Values:*
         - E - estimated
@@ -59,7 +59,7 @@ class Fit:
         self.accuracy = accuracy
 
     def __str__(self):
-        return '%f--%fK' % self.t_range
+        return '%.0f--%.0fK' % self.t_range
 
 
 class Reaction:
@@ -71,7 +71,7 @@ class Reaction:
 
     .. py:attribute:: type
 
-    Reaction type two letter identifier.
+    Reaction type identifier.
             *Values:*
                 - AD - Associative Detachment
                 - CD - Collisional Dissociation
@@ -115,7 +115,7 @@ class Reaction:
         return s
 
     def get_rate(self, t, arg=0.5):
-        """Returns the reaction rate.
+        """Returns a reaction rate coefficient (k).
 
         Common formula:
 

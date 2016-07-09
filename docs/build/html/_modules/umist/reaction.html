@@ -75,7 +75,7 @@
 <span class="sd">    :param c: fit coefficients</span>
 <span class="sd">    :type c: float</span>
 <span class="sd">    :param source: source type.</span>
-<span class="sd">    :type accuracy: str</span>
+<span class="sd">    :type source: str</span>
 
 <span class="sd">    *Values:*</span>
 <span class="sd">        - E - estimated</span>
@@ -102,7 +102,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%f</span><span class="s1">--</span><span class="si">%f</span><span class="s1">K&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_range</span></div>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%.0f</span><span class="s1">--</span><span class="si">%.0f</span><span class="s1">K&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_range</span></div>
 
 
 <div class="viewcode-block" id="Reaction"><a class="viewcode-back" href="../../umist.html#umist.reaction.Reaction">[docs]</a><span class="k">class</span> <span class="nc">Reaction</span><span class="p">:</span>
@@ -114,7 +114,7 @@
 
 <span class="sd">    .. py:attribute:: type</span>
 
-<span class="sd">    Reaction type two letter identifier.</span>
+<span class="sd">    Reaction type identifier.</span>
 <span class="sd">            *Values:*</span>
 <span class="sd">                - AD - Associative Detachment</span>
 <span class="sd">                - CD - Collisional Dissociation</span>
@@ -158,7 +158,7 @@
         <span class="k">return</span> <span class="n">s</span>
 
 <div class="viewcode-block" id="Reaction.get_rate"><a class="viewcode-back" href="../../umist.html#umist.reaction.Reaction.get_rate">[docs]</a>    <span class="k">def</span> <span class="nf">get_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">arg</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the reaction rate.</span>
+        <span class="sd">&quot;&quot;&quot;Returns a reaction rate coefficient (k).</span>
 
 <span class="sd">        Common formula:</span>
 

@@ -88,22 +88,10 @@ It contains temperatures and coefficients for the reaction rate equation.</div><
 <em class="property">class </em><code class="descclassname">umist.reader.</code><code class="descname">Reader</code><a class="reference internal" href="_modules/umist/reader.html#Reader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#umist.reader.Reader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Reader class providing db reading.</p>
-<dl class="attribute">
-<dt id="umist.reader.Reader.url">
-<code class="descname">url</code><a class="headerlink" href="#umist.reader.Reader.url" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<p>Path to the UMIST data link.</p>
+<p>This class has no need to be instantiated.</p>
 <dl class="attribute">
 <dt id="umist.reader.Reader.local_path">
-<code class="descname">local_path</code><a class="headerlink" href="#umist.reader.Reader.local_path" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<p>Local data table position.</p>
-<p>Path to the class log file.</p>
-<dl class="attribute">
-<dt>
-<code class="descname">local_path</code><em class="property"> = '../data/sample.txt'</em></dt>
+<code class="descname">local_path</code><em class="property"> = '../data/sample.txt'</em><a class="headerlink" href="#umist.reader.Reader.local_path" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -134,8 +122,8 @@ be omitted</td>
 </dd></dl>
 
 <dl class="attribute">
-<dt>
-<code class="descname">url</code><em class="property"> = 'http://udfa.ajmarkwick.net/downloads/RATE12.dist.txt'</em></dt>
+<dt id="umist.reader.Reader.url">
+<code class="descname">url</code><em class="property"> = 'http://udfa.ajmarkwick.net/downloads/RATE12.dist.txt'</em><a class="headerlink" href="#umist.reader.Reader.url" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -159,7 +147,7 @@ certain temperature band.</p>
 <li><strong>a</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; </li>
 <li><strong>b</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; </li>
 <li><strong>c</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; fit coefficients</li>
-<li><strong>source</strong> &#8211; source type.</li>
+<li><strong>source</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; source type.</li>
 </ul>
 </td>
 </tr>
@@ -213,7 +201,7 @@ certain temperature band.</p>
 <dd></dd></dl>
 
 <dl class="docutils">
-<dt>Reaction type two letter identifier.</dt>
+<dt>Reaction type identifier.</dt>
 <dd><dl class="first last docutils">
 <dt><em>Values:</em></dt>
 <dd><ul class="first last simple">
@@ -256,7 +244,7 @@ certain temperature band.</p>
 <dl class="method">
 <dt id="umist.reaction.Reaction.get_rate">
 <code class="descname">get_rate</code><span class="sig-paren">(</span><em>t</em>, <em>arg=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/umist/reaction.html#Reaction.get_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#umist.reaction.Reaction.get_rate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the reaction rate.</p>
+<dd><p>Returns a reaction rate coefficient (k).</p>
 <p>Common formula:</p>
 <div class="math">
 \[k = a * {(T/300)}^b * e^{-c/T} [cm^3 * s^{-1}],\]</div>

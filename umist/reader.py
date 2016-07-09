@@ -6,7 +6,7 @@ import os
 import sys
 import urllib.request as request
 
-from urllib.error import *
+from urllib.error import URLError
 
 from .reaction import Reaction, Reagent, Fit
 
@@ -14,17 +14,7 @@ from .reaction import Reaction, Reagent, Fit
 class Reader:
     """Reader class providing db reading.
 
-    .. py:attribute:: url
-
-    Path to the UMIST data link.
-
-    .. py:attribute:: local_path
-
-    Local data table position.
-
-    .. py:attribute:: log_path
-
-    Path to the class log file.
+    This class has no need to be instantiated.
     """
     url = 'http://udfa.ajmarkwick.net/downloads/RATE12.dist.txt'
     local_path = '../data/sample.txt'
