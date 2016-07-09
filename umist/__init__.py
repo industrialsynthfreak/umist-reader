@@ -9,8 +9,8 @@ The module provides a simple class model for the 2012 edition of the
 **Example:**
 ::
 
-    from umist.reader import read
-    reagents, reactions = read()
+    from umist.reader import Reader
+    reagents, reactions = Reader.read()
     print(reactions[0].get_rate(300))
 
 .. note:: The data is loaded directly into memory. At the time it weights
