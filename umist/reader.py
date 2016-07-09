@@ -22,7 +22,7 @@ class Reader:
 
     Local data table position.
 
-    .. py:log_path
+    .. py:attribute:: log_path
 
     Path to the class log file.
     """
