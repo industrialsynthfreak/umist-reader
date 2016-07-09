@@ -83,9 +83,37 @@ It contains temperatures and coefficients for the reaction rate equation.</div><
 <div class="section" id="module-umist.reader">
 <span id="umist-reader-module"></span><h2>umist.reader module<a class="headerlink" href="#module-umist.reader" title="Permalink to this headline">¶</a></h2>
 <p>This file provides parser and loader functions.</p>
-<dl class="function">
-<dt id="umist.reader.read">
-<code class="descclassname">umist.reader.</code><code class="descname">read</code><span class="sig-paren">(</span><em>ignore_exceptions=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/umist/reader.html#read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#umist.reader.read" title="Permalink to this definition">¶</a></dt>
+<dl class="class">
+<dt id="umist.reader.Reader">
+<em class="property">class </em><code class="descclassname">umist.reader.</code><code class="descname">Reader</code><a class="reference internal" href="_modules/umist/reader.html#Reader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#umist.reader.Reader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Reader class providing db reading.</p>
+<dl class="attribute">
+<dt id="umist.reader.Reader.url">
+<code class="descname">url</code><a class="headerlink" href="#umist.reader.Reader.url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Path to the UMIST data link.</p>
+<dl class="attribute">
+<dt id="umist.reader.Reader.local_path">
+<code class="descname">local_path</code><a class="headerlink" href="#umist.reader.Reader.local_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Local data table position.</p>
+<p>Path to the class log file.</p>
+<dl class="attribute">
+<dt>
+<code class="descname">local_path</code><em class="property"> = '../data/sample.txt'</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="umist.reader.Reader.log_path">
+<code class="descname">log_path</code><em class="property"> = '../log/umist_loader.log'</em><a class="headerlink" href="#umist.reader.Reader.log_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="umist.reader.Reader.read">
+<em class="property">classmethod </em><code class="descname">read</code><span class="sig-paren">(</span><em>ignore_exceptions=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/umist/reader.html#Reader.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#umist.reader.Reader.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads and returns a class based representation of UMIST database.</p>
 <p>If URL cannot be reached it will try to parse sample.txt file with
 UMIST 2012 data which should be present in the module dir. Debug info
@@ -103,6 +131,13 @@ be omitted</td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">url</code><em class="property"> = 'http://udfa.ajmarkwick.net/downloads/RATE12.dist.txt'</em></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>

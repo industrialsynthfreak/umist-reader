@@ -48,7 +48,7 @@
 
 <span class="kn">import</span> <span class="nn">unittest</span>
 
-<span class="kn">from</span> <span class="nn">.reader</span> <span class="kn">import</span> <span class="n">read</span>
+<span class="kn">from</span> <span class="nn">umist.reader</span> <span class="kn">import</span> <span class="n">Reader</span>
 
 
 <div class="viewcode-block" id="Test"><a class="viewcode-back" href="../../umist.html#umist.tests.Test">[docs]</a><span class="k">class</span> <span class="nc">Test</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
@@ -59,7 +59,7 @@
 
 <div class="viewcode-block" id="Test.test_reader_function"><a class="viewcode-back" href="../../umist.html#umist.tests.Test.test_reader_function">[docs]</a>    <span class="k">def</span> <span class="nf">test_reader_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">reagents</span><span class="p">,</span> <span class="n">reactions</span> <span class="o">=</span> <span class="n">read</span><span class="p">()</span>
+            <span class="n">reagents</span><span class="p">,</span> <span class="n">reactions</span> <span class="o">=</span> <span class="n">Reader</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span>
                 <span class="s2">&quot;read() function raised an exception and cannot continue: </span><span class="si">%s</span><span class="s2">&quot;</span>
