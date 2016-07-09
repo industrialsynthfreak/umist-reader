@@ -6,19 +6,13 @@ Provides a simple class model for UMIST 2012 chemical reactions database.
 The module provides a simple class model for the 2012 edition of "The UMIST Database for Astrochemistry".
 
 ###Example
-    >> from umist.reader import read
-    >> reagents_list, reactions_list = read()
-    >>
+    >> from umist.reader import Reader
+    >> reagents_list, reactions_list = Reader.read()
+    >> 
 
 The data is loaded directly into memory. At the time it weighs approximately 400kb.
 
 See docs/build auto-generated documentation.
-
-###Classes
-    - Reagent - simple reagent class with no methods
-    - Reaction - simple reaction type, containing reagents, products and fits
-        provides a single method get_rate(temperature, arg=0.5) to determine a reaction rate coefficient
-    - Fit - aux. class containing fit coefficients for Reaction
 
 ###Scientific info
 

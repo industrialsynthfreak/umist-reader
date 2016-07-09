@@ -5,7 +5,7 @@ This one not only tests code but also validates database.
 
 import unittest
 
-from .reader import read
+from umist.reader import Reader
 
 
 class Test(unittest.TestCase):
@@ -16,7 +16,7 @@ class Test(unittest.TestCase):
 
     def test_reader_function(self):
         try:
-            reagents, reactions = read()
+            reagents, reactions = Reader.read()
         except Exception as err:
             self.fail(
                 "read() function raised an exception and cannot continue: %s"
