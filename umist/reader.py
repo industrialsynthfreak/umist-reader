@@ -32,8 +32,9 @@ class Reader:
             be omitted
         :type ignore_exceptions: bool
 
-        :return: list of reactions and list of reagents
-        :rtype: tuple of ([Reaction,..,Reaction], [Reagent,..,Reagent])
+        :return: list of reactions + list of reagents, example:
+                 ([Reaction,..,Reaction], [Reagent,..,Reagent])
+        :rtype: tuple
         """
 
         def setup_logger():
