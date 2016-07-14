@@ -9,8 +9,8 @@ from umist.reader import Reader
 
 
 class Test(unittest.TestCase):
-    _r_types = {'AD', 'CD', 'CE', 'CP', 'CR', 'DR', 'IN',
-                'MN', 'NN', 'PH', 'RA', 'REA', 'RR'}
+    _r_types = {'AD', 'CD', 'CE', 'CP', 'CR', 'DR', 'IN', 'MN', 'NN', 'PH',
+                'RA', 'REA', 'RR'}
     _sources = {'E', 'M', 'C', 'L', 'D', ''}
     _accuracies = {'A', 'B', 'C', 'D', 'E', ''}
 

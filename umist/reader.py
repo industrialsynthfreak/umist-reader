@@ -15,10 +15,31 @@ class Reader:
     """Reader class providing db reading.
 
     This class has no need to be instantiated.
+
+    .. py:attribute:: url
+
+       URL to UMIST 2012 reactions data.
+
+    .. py:attribute:: local_path
+
+       Path to a local db sample (if URL cannot be reached).
+
+    .. py:attribute:: log_path
+
+       Path to the log file.
+
     """
     url = 'http://udfa.ajmarkwick.net/downloads/RATE12.dist.txt'
     local_path = '../data/umist/sample.txt'
-    log_path = '../log/umist_loader.log'
+    log_path = '../umist_loader.log'
+
+    @classmethod
+    def _setup_logger(cls):
+        path = os.path.join(os.path.dirname(__file__), Reader.log_path)
+        logging.basicConfig(filename=path)
+        l = logging.getLogger()
+        l.setLevel(logging.DEBUG)
+        return l
 
     @classmethod
     def read(cls, ignore_exceptions=True):
@@ -36,14 +57,6 @@ class Reader:
                  ([Reaction,..,Reaction], [Reagent,..,Reagent])
         :rtype: tuple
         """
-
-        def setup_logger():
-            logging.basicConfig(
-                filename=os.path.join(
-                    os.path.dirname(__file__), Reader.log_path))
-            l = logging.getLogger()
-            l.setLevel(logging.DEBUG)
-            return l
 
         def get_size_of(data):
             size = sum((sys.getsizeof(r) for r in data))
@@ -90,7 +103,7 @@ class Reader:
 
         REACTIONS = list()
         REAGENTS = dict()
-        logger = setup_logger()
+        logger = cls._setup_logger()
         try:
             logger.debug('Opening URL: %s' % cls.url)
             data = request.urlopen(cls.url)
